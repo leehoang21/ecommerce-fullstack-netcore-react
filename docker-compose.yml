@@ -1,0 +1,14 @@
+version: '3.8'
+services:
+ backend:
+  image: onlineshopbackend:v1
+  ports:
+   - "5214:5214"
+  container_name: onlineshopbackend
+  restart: always
+ frontend:
+  image: onlineshopfrontend:v1
+  ports:
+   - "3000:3000"
+  container_name: onlineshopfrontend
+  restart: always

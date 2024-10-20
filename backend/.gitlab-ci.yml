@@ -1,0 +1,31 @@
+variables:
+    USER_PROJECT: "onlineshop"
+    PROJECT_NAME: "onlineshopbackend"
+    IMAGE_VERSION: "${PROJECT_NAME}:${CI_COMMIT_REF_NAME}_${CI_COMMIT_SHORT_SHA}"
+    PORT: '5454'
+
+stages:
+    - build
+    - deploy
+
+build:
+    stage: build
+    variables:
+        GIT_STRATEGY: clone
+    script:
+        - docker build -t $IMAGE_VERSION .
+    tags:
+        - online-shop-runner-dev-shell
+    only:
+        - tags
+
+deploy:
+    stage: deploy
+    variables:
+        GIT_STRATEGY: none
+    script:
+        - sudo su ${USER_PROJECT} -c "docker rm -f $PROJECT_NAME; docker run --name $PROJECT_NAME -dp $PORT $IMAGE_VERSION"
+    tags:
+        - online-shop-runner-dev-shell
+    only:
+        - tags
